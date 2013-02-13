@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_jar" name="">
+	<target name="compile">
+		<javac srcdir="src" destdir="bin" includeantruntime="false"/>
+	</target>
+    <target name="create_jar" depends="compile">
+    	<delete dir="dist"/>
+    	<mkdir dir="dist"/>
+        <jar destfile="dist/MinecraftMultiPortableLauncher.jar">
+            <manifest>
+                <attribute name="Main-Class" value="mapeper.minecraft.portablelauncher.MinecraftMultiPortableLauncher"/>
+                <attribute name="Class-Path" value=". minecraft.jar bin/minecraft.jar bin/lwjgl_util.jar bin/lwjgl.jar bin/jinput.jar"/>
+            </manifest>
+            <fileset dir="bin" excludes="**/tests/*"/>
+        </jar>
+    	<copy file="dist/MinecraftMultiPortableLauncher.jar" tofile="testfolder/MinecraftMultiPortableLauncher.jar"></copy>
+    </target>
+</project>

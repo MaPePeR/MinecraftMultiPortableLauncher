@@ -91,7 +91,7 @@ public class MinecraftMultiPortableLauncher {
 		{
 			//Minecraft-Launcher not found
 			//User has to download Minecraft-Launcher
-			showLauncherDownload();
+			showLauncherDownload(minecraftLauncherJar);
 		}
 
 			
@@ -144,15 +144,15 @@ public class MinecraftMultiPortableLauncher {
 		else
 			JOptionPane.showMessageDialog(null, error,"Minecraft Multi Portable Launcher",JOptionPane.ERROR_MESSAGE);
 	}
-	private static void showLauncherDownload()
+	private static void showLauncherDownload(File launcherFile)
 	{
-		String[] options = new String[] {"Open Download Page","Download with Browser"/*, "Download" */};
+		String[] options = new String[] {"Open Download Page","Download with Browser", "Download" };
 		int selection = JOptionPane.showOptionDialog(null, "You need to download the minecraft.jar-Launcher and place it next to this program.\nHow do you want to do this?", "Minecraft Multi Portable Launcher", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,options , null);
 		//TODO: check for Headless
 		if(selection==0)
 		{
 			try {
-				Desktop.getDesktop().browse(new URI("http://minecraft.net/download"));
+				Desktop.getDesktop().browse(new URI(downloadPage));
 			} catch (IOException e) {
 				showError("Failed to launch your Default-Browser");
 				e.printStackTrace();
@@ -163,7 +163,7 @@ public class MinecraftMultiPortableLauncher {
 		else if(selection==1)
 		{
 			try {
-				Desktop.getDesktop().browse(new URI("https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar"));
+				Desktop.getDesktop().browse(new URI(launcherJar));
 			} catch (IOException e) {
 				showError("Failed to launch your Default-Browser");
 				e.printStackTrace();
@@ -173,8 +173,15 @@ public class MinecraftMultiPortableLauncher {
 		}
 		else if(selection==2)
 		{
-			//TODO
+			try {
+				DownloadFrame.showDownloadFrame("Downloading minecraft.jar-Launcher", new URL(launcherJar),launcherFile );
+			} catch (MalformedURLException e) {
+				JOptionPane.showMessageDialog(null, "Could not open Downloader","Minecraft Multi Portable Launcher",JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
 		}
 	}
+	public static final String downloadPage= "http://minecraft.net/download";
+	public static final String launcherJar = "https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar";
 
 }

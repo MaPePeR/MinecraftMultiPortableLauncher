@@ -12,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
@@ -36,7 +35,15 @@ public class MinecraftMultiPortableLauncher {
 			} catch (ClassNotFoundException e) {
 				//Should not happen
 				e.printStackTrace();
-				showError("Wrong minecraft.jar next to this Launcher!\nPlease use the Launcher you can download from minecraft.net");
+				showError(
+						"Wrong minecraft.jar next to this Launcher or classpath incomplete!\n" +
+						"Please use the Launcher you can download from minecraft.net\n");
+				return;
+			} catch(RuntimeException e)
+			{
+				showError(
+						"You use a modified Minecraft-Launcher or a Minecraft-Patch broke this Launcher. \n" +
+						"Please check if this issue already has been reportet.");
 				return;
 			}
 				
@@ -51,7 +58,15 @@ public class MinecraftMultiPortableLauncher {
 				} catch (ClassNotFoundException e) {
 					//Should not happen because bin/minecraft.jar exists
 					e.printStackTrace();
-					showError("Class not found!\nUse the Minecraft-Launcher to download the Minecraft files from minecraft.net\nAfter that restart this Program");
+					showError(
+							"Class not found!\n" +
+							"Use the Minecraft-Launcher to download the Minecraft files from minecraft.net\n" +
+							"After that restart this Program");
+					return;
+				} catch(RuntimeException e)
+				{
+					showError("You use a modified Minecraft-Version or a Minecraft-Patch broke this Launcher. \n" +
+							"Please check if this issue already has been reportet.");
 					return;
 				}
 			}
@@ -59,7 +74,9 @@ public class MinecraftMultiPortableLauncher {
 			{
 				//Minecraft-Launcher found, but bin/minecraft.jar not
 				//User has to download Minecraft using the Launcher 
-				showWarning("Download the Minecraft-Files with the Original-Launcher. \nAfter that restart this Program.");
+				showWarning(
+						"Download Minecraft with the Original-Launcher. \n" +
+						"RESTART THIS PROGRAM WHEN THE DOWNLOAD IS FINISHED!");
 			}
 			
 			//Start Minecraft-Launcher
@@ -67,24 +84,9 @@ public class MinecraftMultiPortableLauncher {
 				Class<?> clazz = loader.loadClass("net.minecraft.LauncherFrame");
 				Method main = clazz.getMethod("main", String[].class);
 				main.invoke(null, (Object)new String[]{});
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e)
+			{
+				showError("An Error occured: "+e.getMessage());
 			}
 		}
 		else
@@ -96,7 +98,17 @@ public class MinecraftMultiPortableLauncher {
 
 			
 	}
-	private static boolean setFileSingleton(Class<?> clazz, File file)
+	/**
+	 * Scans the class for a <b>static</b> Field of type <b>java.io.File</b>.<br/>
+	 * If only one Field is found it will be modified.<br/>
+	 * If more or less than one Field match the criteria a RuntimeException will be thrown
+	 * If the Field already has a value a Warning will be shown using {@link #showWarning(String)} 
+	 * @param clazz The class-Object to scan
+	 * @param file  the value for the field
+	 * @throws RuntimeException when the criteria does not result in clear target-Field
+	 * 
+	 */
+	private static void setFileSingleton(Class<?> clazz, File file)
 	{
 		LinkedList<Field> possibleFields = new LinkedList<Field>();
 		for(Field f: clazz.getDeclaredFields())
@@ -122,12 +134,10 @@ public class MinecraftMultiPortableLauncher {
 				e.printStackTrace();
 			}
 			System.out.println("Inserting successful");
-			return true;
 		}
 		else
 		{
-			showError("Inserting File Failed!\nFound "+possibleFields.size()+" possible Targets.");
-			return false;
+			throw new RuntimeException("Found "+possibleFields.size()+" possible Targets.");
 		}
 	}
 	private static void showWarning(String warning)

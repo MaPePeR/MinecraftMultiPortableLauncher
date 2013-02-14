@@ -1,7 +1,6 @@
 package mapeper.minecraft.portablelauncher;
 
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -9,20 +8,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.concurrent.locks.Lock;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
-
 public class DownloadFrame extends JDialog implements ActionListener {
+	private static final long serialVersionUID = 6575404131888157486L;
 	JProgressBar progressBar = new JProgressBar();
 	JButton cancelButton = new JButton("Cancel");
 	private boolean downloadFinished=false;

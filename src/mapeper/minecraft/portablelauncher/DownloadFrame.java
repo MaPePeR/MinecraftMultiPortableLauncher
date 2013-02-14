@@ -19,12 +19,12 @@ public class DownloadFrame extends JDialog implements ActionListener {
 	private static final long serialVersionUID = 6575404131888157486L;
 	JProgressBar progressBar = new JProgressBar();
 	JButton cancelButton = new JButton("Cancel");
-	private boolean downloadFinished=false;
+	private boolean downloadFinished = false;
 	DownloadRunnable runnable;
 	public final Object lock = new Object();
-	public DownloadFrame(String title, URL url, File outFile)
-	{
-		super((Dialog)null,title);
+
+	public DownloadFrame(String title, URL url, File outFile) {
+		super((Dialog) null, title);
 		this.setLocationRelativeTo(getRootPane());
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new DownloadWindowListener());
@@ -33,58 +33,56 @@ public class DownloadFrame extends JDialog implements ActionListener {
 		progressBar.setString("Downloading...");
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridy=1;
-		this.add(cancelButton,c);
-		c.gridy=0;
-		c.fill=GridBagConstraints.HORIZONTAL;
-		c.weightx=1;
-		this.add(progressBar,c);
+		c.gridy = 1;
+		this.add(cancelButton, c);
+		c.gridy = 0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1;
+		this.add(progressBar, c);
 
 		this.setVisible(true);
-		
+
 		this.pack();
-		
+
 		runnable = new DownloadRunnable(progressBar, url, outFile, this);
-		
+
 	}
-	public void startDownload()
-	{
+
+	public void startDownload() {
 		new Thread(runnable).start();
 	}
-	public void setDownloadFinished()
-	{
+
+	public void setDownloadFinished() {
 		progressBar.setString("Finished");
 		cancelButton.setText("Ok");
-		downloadFinished=true;
+		downloadFinished = true;
 		this.pack();
 	}
 
-	private class DownloadWindowListener extends WindowAdapter
-	{
+	private class DownloadWindowListener extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent e) {
 			closeWindow();
 		}
 	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		closeWindow();
 	}
-	private void closeWindow()
-	{
-		if(downloadFinished)
-		{
+
+	private void closeWindow() {
+		if (downloadFinished) {
 			DownloadFrame.this.dispose();
 			synchronized (lock) {
 				lock.notifyAll();
 			}
-		}
-		else
-		{
-			int selection =JOptionPane.showConfirmDialog(DownloadFrame.this, "Do you really want to abort the Download?","Really abort download?",JOptionPane.YES_NO_OPTION);
-			if(selection==JOptionPane.YES_OPTION)
-			{
-				DownloadFrame.this.runnable.run=false;
+		} else {
+			int selection = JOptionPane.showConfirmDialog(DownloadFrame.this,
+					"Do you really want to abort the Download?",
+					"Really abort download?", JOptionPane.YES_NO_OPTION);
+			if (selection == JOptionPane.YES_OPTION) {
+				DownloadFrame.this.runnable.run = false;
 				DownloadFrame.this.dispose();
 				synchronized (lock) {
 					lock.notifyAll();
@@ -92,8 +90,8 @@ public class DownloadFrame extends JDialog implements ActionListener {
 			}
 		}
 	}
-	public static boolean showDownloadFrame(String title, URL url, File outFile)
-	{
+
+	public static boolean showDownloadFrame(String title, URL url, File outFile) {
 		DownloadFrame frame = new DownloadFrame(title, url, outFile);
 		synchronized (frame.lock) {
 			frame.startDownload();
@@ -104,6 +102,6 @@ public class DownloadFrame extends JDialog implements ActionListener {
 			}
 		}
 		return frame.downloadFinished;
-		
+
 	}
 }

@@ -33,3 +33,20 @@ What makes MinecraftMultiPortableLauncher different from other Minecraft-Portabl
 
 > Do not get confused with the minecraft.jar-Launcher and the bin/minecraft.jar. 
 > This program need BOTH to operate correctly.
+
+
+## How dows it work? ##
+
+Singletons FTW. If you don't know what a [Singleton](http://en.wikipedia.org/wiki/Singleton_pattern) is: dont read any further.  
+
+Minecraft has 2 Singletons, that hold the directory of Minecraft.
+
+- One in the launcher(in net.minecraft.Util-Class)
+- Another one in the game(in net.minecraft.client.Minecraft-Class)
+
+Both Classnames are not obfuscated.  
+MMPL then takes the Opporturnity and loads these classes before Minecraft can do it itself.  
+After that [Reflection](http://en.wikipedia.org/wiki/Reflection_\(computer_programming\)) is used to make the Fields accessible and give them a value.
+
+Because I don't know the exact name of the Fields i simply scan the Classes for any static File Field.  
+This will break, when there are multiple Fields matching the criteria or when the singletons are removed in a future Minecraft version or the Class-Names get obfuscated lika all the others.

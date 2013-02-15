@@ -81,14 +81,14 @@ public class Messages {
 	 */
 	public static void showLauncherDownload(File launcherFile) {
 		String[] options = new String[] { "Open Download Page",
-				"Download with Browser", "Download" };
+				"Download with Browser", "Download (recommended)" };
 		int selection = JOptionPane
 				.showOptionDialog(
 						null,
 						"You need to download the minecraft.jar-Launcher and place it next to this program.\nHow do you want to do this?",
 						Constants.messageTitle,
 						JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, options, null);
+						JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 		// TODO: check for Headless
 		if (selection == 0) {//Open Download Page
 			try {

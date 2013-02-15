@@ -108,7 +108,7 @@ public class Messages {
 			if(DownloadFrame.showDownloadFrame("Downloading minecraft.jar-Launcher", Constants.getLauncherJarURL(), launcherFile))
 			{
 
-				int wantsRestart = JOptionPane.showConfirmDialog(null, "Do you want to start the Launcher now to download Minecraft?\n",Constants.messageTitle,JOptionPane.YES_NO_OPTION);
+				int wantsRestart = JOptionPane.showConfirmDialog(null, "Do you want to restart MMPL now to download Minecraft?\n",Constants.messageTitle,JOptionPane.YES_NO_OPTION);
 				if(wantsRestart==JOptionPane.YES_OPTION)
 				{
 					JOptionPane.showMessageDialog(null, "Do not forget to restart the Program when the download is finished.",Constants.messageTitle,JOptionPane.INFORMATION_MESSAGE);

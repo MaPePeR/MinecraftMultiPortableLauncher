@@ -1,6 +1,5 @@
 # Multi-Platform Portable Minecraft Launcher#
 
----
 
 The most current version can be found [here](https://github.com/MaPePeR/MinecraftMultiPortableLauncher/blob/master/dist/MinecraftMultiPortableLauncher.jar?raw=true).
 
@@ -16,8 +15,6 @@ What makes MinecraftMultiPortableLauncher different from other Minecraft-Portabl
 
 
 ## How to run MinecraftMultiPortableLauncher (MMPL) ##
-
----
 
 1. Place the MinecraftMultiPortableLauncher.jar in a folder of your choice.
 1. Start the .jar file.

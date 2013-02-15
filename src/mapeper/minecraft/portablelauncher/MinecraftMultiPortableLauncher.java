@@ -1,20 +1,11 @@
 package mapeper.minecraft.portablelauncher;
 
-import java.awt.Desktop;
-import java.awt.GraphicsEnvironment;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
-
-import javax.swing.JOptionPane;
 
 public class MinecraftMultiPortableLauncher {
 
@@ -34,14 +25,11 @@ public class MinecraftMultiPortableLauncher {
 				setFileSingleton(clazz, currentDir);
 			} catch (ClassNotFoundException e) {
 				// Should not happen
-				e.printStackTrace();
-				Messages.showError("Wrong minecraft.jar next to this Launcher or classpath incomplete!\n"
-						+ "Please use the Launcher you can download from minecraft.net\n");
-				return;
+				Messages.showFatalError("Wrong minecraft.jar next to this Launcher or classpath incomplete!\n"
+						+ "Please use the Launcher you can download from minecraft.net\n",e);
 			} catch (RuntimeException e) {
-				Messages.showError("You use a modified Minecraft-Launcher or a Minecraft-Patch broke this Launcher. \n"
-						+ "Please check if this issue already has been reportet.");
-				return;
+				Messages.showFatalError("You use a modified Minecraft-Launcher or a Minecraft-Patch broke this Launcher. \n"
+						+ "Please check if this issue already has been reportet.",e);
 			}
 
 			if (binDir.isDirectory() && minecraftJar.isFile()) {
@@ -55,15 +43,12 @@ public class MinecraftMultiPortableLauncher {
 					setFileSingleton(clazz, currentDir);
 				} catch (ClassNotFoundException e) {
 					// Should not happen because bin/minecraft.jar exists
-					e.printStackTrace();
-					Messages.showError("Class not found!\n"
+					Messages.showFatalError("Class not found!\n"
 							+ "Use the Minecraft-Launcher to download the Minecraft files from minecraft.net\n"
-							+ "After that restart this Program");
-					return;
+							+ "After that restart this Program",e);
 				} catch (RuntimeException e) {
-					Messages.showError("You use a modified Minecraft-Version or a Minecraft-Patch broke this Launcher. \n"
-							+ "Please check if this issue already has been reportet.");
-					return;
+					Messages.showFatalError("You use a modified Minecraft-Version or a Minecraft-Patch broke this Launcher. \n"
+							+ "Please check if this issue already has been reportet.",e);
 				}
 			} else {
 				// Minecraft-Launcher found, but bin/minecraft.jar not
@@ -79,7 +64,7 @@ public class MinecraftMultiPortableLauncher {
 				Method main = clazz.getMethod("main", String[].class);
 				main.invoke(null, (Object) new String[] {});
 			} catch (Exception e) {
-				Messages.showError("An Error occured: " + e.getMessage());
+				Messages.showFatalError("Error starting Minecraft Launcher",e);
 			}
 		} else {
 			// Minecraft-Launcher not found

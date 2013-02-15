@@ -42,8 +42,23 @@ public class Messages {
 			System.err.println("ERROR: " + error);
 		else
 			JOptionPane.showMessageDialog(null, error,
-					"Minecraft Multi Portable Launcher",
+					Constants.messageTitle,
 					JOptionPane.ERROR_MESSAGE);
+	}
+	public static void showFatalError(String error, Throwable t)
+	{
+		if (GraphicsEnvironment.isHeadless())
+		{
+			System.err.println("FATAL ERROR: " + error);
+			t.printStackTrace(System.err);
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, error,
+					"FATAL ERROR OCCURED",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		System.exit(1);
 	}
 
 	/**
@@ -71,7 +86,7 @@ public class Messages {
 				.showOptionDialog(
 						null,
 						"You need to download the minecraft.jar-Launcher and place it next to this program.\nHow do you want to do this?",
-						"Minecraft Multi Portable Launcher",
+						Constants.messageTitle,
 						JOptionPane.OK_CANCEL_OPTION,
 						JOptionPane.QUESTION_MESSAGE, null, options, null);
 		// TODO: check for Headless
@@ -92,12 +107,18 @@ public class Messages {
 		} else if (selection == 2) {//Download
 			if(DownloadFrame.showDownloadFrame("Downloading minecraft.jar-Launcher", Constants.getLauncherJarURL(), launcherFile))
 			{
-				try {
-					MinecraftMultiPortableLauncher.restartApplication();
-				}
-				catch(Exception e)
+
+				int wantsRestart = JOptionPane.showConfirmDialog(null, "Do you want to start the Launcher now to download Minecraft?\n",Constants.messageTitle,JOptionPane.YES_NO_OPTION);
+				if(wantsRestart==JOptionPane.YES_OPTION)
 				{
-					showError("Restarting Application Failed!\n"+e.getMessage());
+					JOptionPane.showMessageDialog(null, "Do not forget to restart the Program when the download is finished.",Constants.messageTitle,JOptionPane.INFORMATION_MESSAGE);
+					try {
+						MinecraftMultiPortableLauncher.restartApplication();
+					}
+					catch(Exception e)
+					{
+						showError("Restarting Application Failed!\n"+e.getMessage());
+					}
 				}
 			}
 		}

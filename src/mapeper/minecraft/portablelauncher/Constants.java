@@ -6,6 +6,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 public class Constants {
+	
+	public static final String messageTitle = "Minecraft Multi Portable Launcher";
+
+	
 	/**
 	 * Hardcoded URL to the minecraft.jar-Launcher (On Amazon S3)
 	 */
@@ -19,7 +23,7 @@ public class Constants {
 			try {
 				launcherJarURL=new URL(launcherJar);
 			} catch (MalformedURLException e) {
-				Messages.showError("This Error Should never occur.\n"+e.getMessage());
+				Messages.showFatalError("Can't turn "+launcherJar+" into URL",e);
 			}
 			
 		}
@@ -33,7 +37,7 @@ public class Constants {
 			try {
 				launcherJarURI=new URI(launcherJar);
 			} catch (URISyntaxException e) {
-				Messages.showError("This Error Should never occur.\n"+e.getMessage());
+				Messages.showFatalError("Can't turn "+launcherJar+" into URI",e);
 			}
 		}
 		return launcherJarURI;
@@ -51,7 +55,7 @@ public class Constants {
 			try {
 				downloadPageURI=new URI(downloadPage);
 			} catch (URISyntaxException e) {
-				Messages.showError("This Error Should never occur.\n"+e.getMessage());			}
+				Messages.showFatalError("Can't turn "+downloadPage+" into URI",e);			}
 		}
 		return downloadPageURI;
 	}

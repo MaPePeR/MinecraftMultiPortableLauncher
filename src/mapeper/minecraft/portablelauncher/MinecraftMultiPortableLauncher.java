@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
@@ -198,46 +199,107 @@ public class MinecraftMultiPortableLauncher {
 						JOptionPane.OK_CANCEL_OPTION,
 						JOptionPane.QUESTION_MESSAGE, null, options, null);
 		// TODO: check for Headless
-		if (selection == 0) {
+		if (selection == 0) {//Open Download Page
 			try {
-				Desktop.getDesktop().browse(new URI(downloadPage));
+				Desktop.getDesktop().browse(getDownloadPageURI());
 			} catch (IOException e) {
 				showError("Failed to launch your Default-Browser");
 				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
 			}
-		} else if (selection == 1) {
+		} else if (selection == 1) {//Download with Browser
 			try {
-				Desktop.getDesktop().browse(new URI(launcherJar));
+				Desktop.getDesktop().browse(getLauncherJarURI());
 			} catch (IOException e) {
 				showError("Failed to launch your Default-Browser");
 				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
 			}
-		} else if (selection == 2) {
-			try {
-				DownloadFrame.showDownloadFrame(
-						"Downloading minecraft.jar-Launcher", new URL(
-								launcherJar), launcherFile);
-			} catch (MalformedURLException e) {
-				JOptionPane.showMessageDialog(null,
-						"Could not open Downloader",
-						"Minecraft Multi Portable Launcher",
-						JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
+		} else if (selection == 2) {//Download
+			if(DownloadFrame.showDownloadFrame("Downloading minecraft.jar-Launcher", getLauncherJarURL(), launcherFile))
+			{
+				try {
+					restartApplication();
+				}
+				catch(Exception e)
+				{
+					showError("Restarting Application Failed!\n"+e.getMessage());
+				}
 			}
 		}
 	}
 
-	/**
-	 * Hardcoded URL to the Minecraft-Download-Page
-	 */
-	public static final String downloadPage = "http://minecraft.net/download";
+
 	/**
 	 * Hardcoded URL to the minecraft.jar-Launcher (On Amazon S3)
 	 */
 	public static final String launcherJar = "https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar";
+	private static URL launcherJarURL;
+	private static URI launcherJarURI;
+	public static URL getLauncherJarURL()
+	{
+		if(launcherJarURL==null)
+		{
+			try {
+				launcherJarURL=new URL(launcherJar);
+			} catch (MalformedURLException e) {
+				showError("This Error Should never occur.\n"+e.getMessage());
+			}
+			
+		}
+		return launcherJarURL;
+	}
+	
+	public static URI getLauncherJarURI()
+	{
+		if(launcherJarURI==null)
+		{
+			try {
+				launcherJarURI=new URI(launcherJar);
+			} catch (URISyntaxException e) {
+				showError("This Error Should never occur.\n"+e.getMessage());
+			}
+		}
+		return launcherJarURI;
+	}
+	
+	/**
+	 * Hardcoded URL to the Minecraft-Download-Page
+	 */
+	public static final String downloadPage = "http://minecraft.net/download";
+	private static URI downloadPageURI;
+	public static URI getDownloadPageURI()
+	{
+		if(downloadPageURI==null)
+		{
+			try {
+				downloadPageURI=new URI(downloadPage);
+			} catch (URISyntaxException e) {
+				showError("This Error Should never occur.\n"+e.getMessage());			}
+		}
+		return downloadPageURI;
+	}
+	
+	/**
+	 * Restarts this Application-Jar<br/>
+	 * Thanks to "Veger" on Stackoverflow for this Solution: <a href="http://stackoverflow.com/a/4194224">http://stackoverflow.com/a/4194224</a>
+	 * @throws Exception
+	 */
+	private static void restartApplication() throws Exception
+	{
+	  final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+	  final File currentJar = new File(MinecraftMultiPortableLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
+	  /* is it a jar file? */
+	  if(!currentJar.getName().endsWith(".jar"))
+	    throw new Exception("Program was not started from Jar");
+
+	  /* Build command: java -jar application.jar */
+	  final ArrayList<String> command = new ArrayList<String>();
+	  command.add(javaBin);
+	  command.add("-jar");
+	  command.add(currentJar.getPath());
+
+	  final ProcessBuilder builder = new ProcessBuilder(command);
+	  builder.start();
+	  System.exit(0);
+	}
 }

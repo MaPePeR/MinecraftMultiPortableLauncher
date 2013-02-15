@@ -8,7 +8,7 @@
     	<mkdir dir="dist"/>
         <jar destfile="dist/MinecraftMultiPortableLauncher.jar">
             <manifest>
-                <attribute name="Main-Class" value="mapeper.minecraft.portablelauncher.MinecraftMultiPortableLauncher"/>
+                <attribute name="Main-Class" value="mapeper.minecraft.portablelauncher.StartWithJVMArguments"/>
                 <attribute name="Class-Path" value=". minecraft.jar bin/minecraft.jar bin/lwjgl_util.jar bin/lwjgl.jar bin/jinput.jar"/>
             </manifest>
             <fileset dir="bin" excludes="**/tests/*"/>

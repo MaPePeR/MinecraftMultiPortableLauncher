@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="create_jar" name="">
-	<target name="compile">
-		<javac srcdir="src" destdir="bin" includeantruntime="false"/>
+	<target name="clean" depends="init">
+		<delete dir="bin"/>
+	</target>
+	<target name="init">
+		<mkdir dir="bin"/>
+	</target>
+	<target name="compile" depends="init">
+		<javac target="1.6" source="1.6" srcdir="src" destdir="bin" includeantruntime="false"/>
 	</target>
     <target name="create_jar" depends="compile">
     	<delete dir="dist"/>
@@ -13,6 +19,5 @@
             </manifest>
             <fileset dir="bin" excludes="**/tests/*"/>
         </jar>
-    	<copy file="dist/MinecraftMultiPortableLauncher.jar" tofile="testfolder/MinecraftMultiPortableLauncher.jar"></copy>
     </target>
 </project>

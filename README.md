@@ -32,7 +32,7 @@ What makes MinecraftMultiPortableLauncher different from other Minecraft-Portabl
 1. Start MMPL again to enjoy your Portable Minecraft
 
 > Do not get confused with the minecraft.jar-Launcher and the bin/minecraft.jar. 
-> This program need BOTH to operate correctly.
+> This program needs BOTH to operate correctly.
 
 
 ## How dows it work? ##
